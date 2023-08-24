@@ -99,18 +99,18 @@ class InvoiceController extends Controller
         ]);
         $qr_data = $validator->validated();
         $base64_image = "";
-        return $qr_data;
-        // if ($request->has('qr_logo')) {
-        //     $this->base64_image_string = $this->render_with_logo($qr_data, $this->logo);
-        // } else {
-        //     $this->base64_image_string = $this->render($qr_data);
-        // }
+        // return $qr_data;
+        if ($request->has('qr_logo')) {
+            $this->base64_image_string = $this->render_with_logo($qr_data, $this->logo);
+        } else {
+            $this->base64_image_string = $this->render($qr_data);
+        }
 
-        // switch ($request->qr_options) {
-        //     case "pdf":
-        //         return $this->pdf_file_with_image();
-        //         break;
-        // }
+        switch ($request->qr_options) {
+            case "pdf":
+                return $this->pdf_file_with_image();
+                break;
+        }
     }
 
     public function pdf_file_with_image()
@@ -130,6 +130,7 @@ class InvoiceController extends Controller
         $pdf = PDF::loadView('pdf-with-qr', $data);
 
         return $pdf->download($this->temporary_pdf_file_name);
+        // return view('pdf-with-qr', $data);
     }
 
     public function image_html($base64_file)
